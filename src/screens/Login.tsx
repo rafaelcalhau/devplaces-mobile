@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   Alert,
   Keyboard,
@@ -12,21 +13,24 @@ import {
   View
 } from 'react-native'
 
-import api from '../services/api'
 import theme from '../theme'
 
+import { AppState } from '../store/index'
+import { loginRequest } from '../store/ducks/user/actions'
 import ErrorHandlerFactory from '../modules/ErrorHandler'
 
 export default function Login() {
+  const dispatch = useDispatch()
   const [email, setEmail] = useState('')
   const [passw, setPassw] = useState('')
+  const { loading } = useSelector((state: AppState) => state.user)
 
   const ErrorHandler = new ErrorHandlerFactory()
   const Logo = require('../assets/logo.png')
 
   ErrorHandler.attachDialogComponent(Alert)
 
-  const handleSubmit = async (): Promise<void> => {
+  const handleSubmit = () => {
     if (email.indexOf('@') < 0 || email.indexOf('.') < 0) {
       return ErrorHandler.showAlert('invalid-email')
     }
@@ -34,12 +38,7 @@ export default function Login() {
       return ErrorHandler.showAlert('invalid-password')
     }
 
-    try {
-      const response = await api.post('/authenticate', { email, password: passw })
-      const { id, name, token } = response.data
-    } catch {
-      ErrorHandler.showAlert('authentication')
-    }
+    dispatch(loginRequest(email, passw))
   }
 
   return (
@@ -72,7 +71,9 @@ export default function Login() {
         <TouchableOpacity
           onPress={handleSubmit}
           style={styles.button}>
-          <Text style={styles.buttonText}>LOGIN</Text>
+          <Text style={styles.buttonText}>
+            { !loading ? 'LOGIN' : 'LOADING...' }
+          </Text>
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
