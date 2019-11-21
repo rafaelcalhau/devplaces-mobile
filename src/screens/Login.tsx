@@ -1,9 +1,9 @@
-import React, { useEffect, useState, EffectCallback } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigation } from 'react-navigation-hooks'
+import AsyncStorage from '@react-native-community/async-storage'
 import {
   Alert,
-  AsyncStorage,
   Keyboard,
   KeyboardAvoidingView,
   Image,
@@ -46,6 +46,8 @@ export default function Login() {
             setAutoLogin(true)
             dispatch(sessionStored(session))
           }
+        } else {
+          setSessionVerification(true)
         }
       })
   }, [])
@@ -112,10 +114,6 @@ export default function Login() {
                   { !loading ? 'LOGIN' : 'LOADING...' }
                 </Text>
               </TouchableOpacity>
-      
-              <Text style={{ textAlign: 'center', marginTop: 10 }}>
-                { JSON.stringify(data) }
-              </Text>
             </View>
       }
     </KeyboardAvoidingView>
