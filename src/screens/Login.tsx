@@ -1,7 +1,9 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState, EffectCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useNavigation } from 'react-navigation-hooks'
 import {
   Alert,
+  AsyncStorage,
   Keyboard,
   KeyboardAvoidingView,
   Image,
@@ -16,19 +18,51 @@ import {
 import theme from '../theme'
 
 import { AppState } from '../store/index'
-import { loginRequest } from '../store/ducks/user/actions'
+import { loginRequest, sessionStored } from '../store/ducks/user/actions'
 import ErrorHandlerFactory from '../modules/ErrorHandler'
 
 export default function Login() {
   const dispatch = useDispatch()
-  const [email, setEmail] = useState('')
+  const { navigate } = useNavigation()
+  const [email, setEmail] = useState('rafael@calhau.me')
   const [passw, setPassw] = useState('')
-  const { loading } = useSelector((state: AppState) => state.user)
+  const [isAutoLogin, setAutoLogin] = useState(false)
+  const [isSessionVerified, setSessionVerification] = useState(false)
+  const { data, loading } = useSelector((state: AppState) => state.user)
 
   const ErrorHandler = new ErrorHandlerFactory()
   const Logo = require('../assets/logo.png')
 
   ErrorHandler.attachDialogComponent(Alert)
+
+  useEffect(() => {
+    AsyncStorage
+      .getItem('user')
+      .then(data => {
+        if (data) {
+          const session = JSON.parse(data)
+
+          if (session.id && session.id.length) {
+            setAutoLogin(true)
+            dispatch(sessionStored(session))
+          }
+        }
+      })
+  }, [])
+
+  useEffect(() => {
+    if (data.id !== undefined && data.id.length) {
+      if (!isAutoLogin) {
+        AsyncStorage.setItem('user', JSON.stringify(data))
+      }
+      
+      callListScreen()
+    }
+  }, [data])
+
+  const callListScreen = () => {
+    setTimeout(() => navigate('ListScreen'), 1000)
+  }
 
   const handleSubmit = () => {
     if (email.indexOf('@') < 0 || email.indexOf('.') < 0) {
@@ -49,33 +83,41 @@ export default function Login() {
       style={styles.container}>
       <Image source={Logo} />
       
-      <View style={styles.form}>
-        <Text style={styles.label}>YOUR EMAIL</Text>
-        <TextInput
-          autoCapitalize='none'
-          autoCorrect={false}
-          keyboardType='email-address'
-          onChangeText={setEmail}
-          placeholder='my@email.com'
-          placeholderTextColor='#999'
-          style={styles.input}
-          value={email} />
-
-        <Text style={styles.label}>PASSWORD</Text>
-        <TextInput
-          onChangeText={setPassw}
-          secureTextEntry
-          style={styles.input}
-          value={passw} />
-
-        <TouchableOpacity
-          onPress={handleSubmit}
-          style={styles.button}>
-          <Text style={styles.buttonText}>
-            { !loading ? 'LOGIN' : 'LOADING...' }
-          </Text>
-        </TouchableOpacity>
-      </View>
+      {
+        !isSessionVerified
+          ? <Text>Loading</Text>
+          : <View style={styles.form}>
+              <Text style={styles.label}>YOUR EMAIL</Text>
+              <TextInput
+                autoCapitalize='none'
+                autoCorrect={false}
+                keyboardType='email-address'
+                onChangeText={setEmail}
+                placeholder='my@email.com'
+                placeholderTextColor='#999'
+                style={styles.input}
+                value={email} />
+      
+              <Text style={styles.label}>PASSWORD</Text>
+              <TextInput
+                onChangeText={setPassw}
+                secureTextEntry
+                style={styles.input}
+                value={passw} />
+      
+              <TouchableOpacity
+                onPress={handleSubmit}
+                style={styles.button}>
+                <Text style={styles.buttonText}>
+                  { !loading ? 'LOGIN' : 'LOADING...' }
+                </Text>
+              </TouchableOpacity>
+      
+              <Text style={{ textAlign: 'center', marginTop: 10 }}>
+                { JSON.stringify(data) }
+              </Text>
+            </View>
+      }
     </KeyboardAvoidingView>
   )
 }

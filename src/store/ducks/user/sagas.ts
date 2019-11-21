@@ -4,8 +4,6 @@ import api from '../../../services/api'
 import { loginFailed, loginSuccess } from './actions'
 
 export function * login(action: ActionLogin) {
-  console.log('login')
-
   const data = action.payload
 
   try {

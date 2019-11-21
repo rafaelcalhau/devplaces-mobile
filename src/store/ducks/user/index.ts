@@ -1,4 +1,3 @@
-import { AsyncStorage } from 'react-native'
 import { Reducer } from 'redux'
 import { UserActions, UserState } from './types'
 
@@ -15,7 +14,6 @@ const INITIAL_STATE: UserState = {
 
 const reducer: Reducer = (state: UserState = INITIAL_STATE, action) => {
   const { type } = action
-  console.log('Hi, my name is reducer', action)
 
   switch (type) {
     case UserActions.LOGIN_FAILURE:
@@ -25,17 +23,15 @@ const reducer: Reducer = (state: UserState = INITIAL_STATE, action) => {
         loading: false
       }
     case UserActions.LOGIN_REQUEST:
-      console.log('reducer: loginRequest')
       return {
         ...state,
         error: '',
         loading: true
       }
     case UserActions.LOGIN_SUCCESS:
-      return (async function (): Promise<UserState> {
+      return (function (): UserState {
         const data = { ...action.payload.data }
-        await AsyncStorage.setItem('user', JSON.stringify(data))
-
+        
         return {
           ...state,
           data,
@@ -44,13 +40,16 @@ const reducer: Reducer = (state: UserState = INITIAL_STATE, action) => {
         }
       }())
     case UserActions.LOGOUT:
-      return (async function() {
-        await AsyncStorage.removeItem('user')
-
-        return {
-          ...INITIAL_STATE
-        }
-      }())
+      return {
+        ...INITIAL_STATE
+      }
+    case UserActions.SESSION_STORED:
+      return {
+        ...state,
+        data: action.payload.data,
+        error: '',
+        loading: false
+      }
     default:
       return state
   }

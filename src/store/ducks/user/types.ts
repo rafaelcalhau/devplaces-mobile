@@ -7,7 +7,8 @@ export enum UserActions {
   LOGIN_REQUEST = '@user/LOGIN_REQUEST',
   LOGIN_SUCCESS = '@user/LOGIN_SUCCESS',
   LOGIN_FAILURE = '@user/LOGIN_FAILURE',
-  LOGOUT = '@user/LOGOUT'
+  LOGOUT = '@user/LOGOUT',
+  SESSION_STORED = '@user/SESSION_STORED'
 }
 
 export interface UserLogin {
