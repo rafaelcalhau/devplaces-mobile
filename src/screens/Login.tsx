@@ -83,38 +83,42 @@ export default function Login() {
       enabled={Platform.OS === 'ios'}
       onTouchStart={() => Keyboard.dismiss()}
       style={styles.container}>
-      <Image source={Logo} />
       
       {
         !isSessionVerified
-          ? <Text>Loading</Text>
-          : <View style={styles.form}>
-              <Text style={styles.label}>YOUR EMAIL</Text>
-              <TextInput
-                autoCapitalize='none'
-                autoCorrect={false}
-                keyboardType='email-address'
-                onChangeText={setEmail}
-                placeholder='my@email.com'
-                placeholderTextColor='#999'
-                style={styles.input}
-                value={email} />
-      
-              <Text style={styles.label}>PASSWORD</Text>
-              <TextInput
-                onChangeText={setPassw}
-                secureTextEntry
-                style={styles.input}
-                value={passw} />
-      
-              <TouchableOpacity
-                onPress={handleSubmit}
-                style={styles.button}>
-                <Text style={styles.buttonText}>
-                  { !loading ? 'LOGIN' : 'LOADING...' }
-                </Text>
-              </TouchableOpacity>
-            </View>
+          ? <Text>Loading...</Text>
+          : (
+            <>
+              <Image source={Logo} />
+              <View style={styles.form}>
+                <Text style={styles.label}>YOUR EMAIL</Text>
+                <TextInput
+                  autoCapitalize='none'
+                  autoCorrect={false}
+                  keyboardType='email-address'
+                  onChangeText={setEmail}
+                  placeholder='my@email.com'
+                  placeholderTextColor='#999'
+                  style={styles.input}
+                  value={email} />
+        
+                <Text style={styles.label}>PASSWORD</Text>
+                <TextInput
+                  onChangeText={setPassw}
+                  secureTextEntry
+                  style={styles.input}
+                  value={passw} />
+        
+                <TouchableOpacity
+                  onPress={handleSubmit}
+                  style={styles.button}>
+                  <Text style={styles.buttonText}>
+                    { !loading ? 'LOGIN' : 'LOADING...' }
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </>
+          )
       }
     </KeyboardAvoidingView>
   )

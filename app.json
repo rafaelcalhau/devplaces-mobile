@@ -1,5 +1,6 @@
 {
-  "apiURL": "http://localhost:5000/api",
+  "apiURL": "https://devplaces.calhau.me/api",
+  "displayName": "devplacesmobile",
   "name": "devplacesmobile",
-  "displayName": "devplacesmobile"
+  "uploadsUrl": "https://devplaces.calhau.me/files"
 }

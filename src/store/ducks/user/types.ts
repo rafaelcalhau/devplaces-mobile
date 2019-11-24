@@ -3,6 +3,12 @@ export interface ActionLogin {
   payload: UserLogin
 }
 
+export interface User {
+  _id: string;
+  name: string;
+  email: string;
+}
+
 export enum UserActions {
   LOGIN_REQUEST = '@user/LOGIN_REQUEST',
   LOGIN_SUCCESS = '@user/LOGIN_SUCCESS',
