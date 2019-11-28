@@ -20,23 +20,36 @@ export default function List() {
   useEffect(() => groupSpots(), [spotsState.data])
 
   function groupSpots () {
-    if (!techs.length && spotsState.data.length) {
-      const groups: any = {}
-      
-      spotsState.data.map((spot: Spot) => {
-        spot.technologies.map((tech: string) => {
-          const key = tech.trim().toUpperCase()
+    const groups: any = {}
 
-          if (groups[`${key}`] === undefined) {
-            groups[`${key}`] = []
-          }
+    if (spotsState.data.length) {
+      if (search.length) {
+        // When we search technologies
 
-          groups[key].push({ ...spot })
+        groups[search] = []
+        
+        spotsState.data.map((spot: Spot) => {
+          groups[search].push({ ...spot })
         })
-      })
+      }
+      else if (!techs.length) { 
+        // When we don't
 
-      setTechs(groups)
+        spotsState.data.map((spot: Spot) => {
+          spot.technologies.map((tech: string) => {
+            const key = tech.trim().toUpperCase()
+
+            if (groups[`${key}`] === undefined) {
+              groups[`${key}`] = []
+            }
+
+            groups[key].push({ ...spot })
+          })
+        })
+      }
     }
+
+    setTechs(groups)
   }
 
   function handleSearch () {

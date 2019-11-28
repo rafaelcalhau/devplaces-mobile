@@ -8,14 +8,12 @@ export function * load (action: SpotsRequest) {
   const { payload } = action
 
   try {
-    const query = payload.technologies.length ? `?technologies${payload.technologies}` : ''
+    const query = payload.technologies.length ? `?technologies=${payload.technologies}` : ''
     const response = yield call(api.get, `/spots${query}`, {
       headers: {
         authorization: `Bearer ${payload.token}`
       }
     })
-
-    console.log(response)
 
     if (response.status === 200) {
       yield put(spotsSuccess(response.data))
