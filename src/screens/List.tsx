@@ -1,17 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useNavigation } from 'react-navigation-hooks'
 import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import AsyncStorage from '@react-native-community/async-storage'
 import Icon from 'react-native-vector-icons/Feather'
 
 import SpotList from '../components/SpotList'
 import { AppState } from '../store'
 import { Spot } from '../store/ducks/spots/types' 
 import { spotsRequest } from '../store/ducks/spots/actions'
+import { logout } from '../store/ducks/user/actions'
 
 export default function List() {
+  const [isFiltering, setFilteringState] = useState(false)
   const [search, setSearch] = useState('')
   const [techs, setTechs] = useState([])
   const dispatch = useDispatch()
+  const { navigate } = useNavigation()
   const spotsState = useSelector((state: AppState) => state.spots)
   const { token : userToken } = useSelector((state: AppState) => state.user.data)
   const Logo = require('../assets/logo.png')
@@ -56,10 +61,28 @@ export default function List() {
     dispatch(spotsRequest(search, userToken))
   }
 
+  async function logoutUser () {
+    AsyncStorage
+      .removeItem('user')
+      .then(() => {
+        dispatch(logout())
+        navigate('LoginScreen')
+      })
+  }
+
   function renderSpots() {
     const keys: any = Object.keys(techs)
 
-    if (!keys.length) return
+    if (spotsState.loaded && !keys.length && search.length) {
+      return (
+        <View style={styles.notFound}>
+          <Icon name='frown' size={26} />
+          <Text style={styles.notFoundText}>
+            No companies found.
+          </Text>
+        </View>
+      )
+    }
 
     return (
       <ScrollView style={ styles.spots }>
@@ -80,21 +103,38 @@ export default function List() {
   
   return (
     <SafeAreaView style={styles.container}>
-      <Image source={Logo} style={styles.logo} />
-
-      <View style={styles.form}>
-        <TextInput
-          onChangeText={setSearch}
-          autoCapitalize='words'
-          placeholder='Search for Technologies'
-          style={styles.input}
-          value={search} />
+      <View style={styles.topbar}>
         <TouchableOpacity
-          onPress={handleSearch}
-          style={styles.searchButton}>
-          <Icon name='search' size={26} />
+          onPress={() => setFilteringState(!isFiltering)}
+          style={styles.topbarButton}>
+          <Icon name='filter' size={26} />
+        </TouchableOpacity>
+
+        <Image source={Logo} style={styles.logo} />
+
+        <TouchableOpacity
+          onPress={logoutUser}
+          style={styles.topbarButton}>
+          <Icon name='log-out' size={26} />
         </TouchableOpacity>
       </View>
+
+      {
+        isFiltering &&
+        <View style={styles.form}>
+          <TextInput
+            onChangeText={setSearch}
+            autoCapitalize='words'
+            placeholder='Search for Technologies'
+            style={styles.input}
+            value={search} />
+          <TouchableOpacity
+            onPress={handleSearch}
+            style={styles.searchButton}>
+            <Icon name='search' size={26} />
+          </TouchableOpacity>
+        </View>
+      }
 
       {
         !spotsState.loaded && <Text>Loading spots...</Text>
@@ -133,6 +173,14 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     resizeMode: 'contain'
   },
+  notFound: {
+    alignItems: 'center',
+    marginVertical: 20
+  },
+  notFoundText: {
+    color: '#444',
+    marginVertical: 5
+  },
   searchButton: {
     height: 46,
     paddingHorizontal: 10,
@@ -143,5 +191,17 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     marginHorizontal: 15,
     marginTop: 10
+  },
+  topbar: {
+    alignItems: 'center',
+    alignSelf: 'stretch',
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  topbarButton: {
+    height: 46,
+    paddingHorizontal: 10,
+    justifyContent: 'center',
+    marginHorizontal: 10
   }
 })
