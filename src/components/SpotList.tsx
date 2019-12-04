@@ -1,5 +1,6 @@
 import React, { FC } from 'react'
 import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { useNavigation } from 'react-navigation-hooks'
 import { Spot } from '../store/ducks/spots/types'
 import { uploadsUrl } from '../../app.json'
 import theme from '../theme'
@@ -11,6 +12,7 @@ interface SpotListProps {
 
 const SpotList: FC<SpotListProps> = (props: SpotListProps) => {
   const { spots, tech } = props
+  const { navigate } = useNavigation()
 
   return (
     <>
@@ -34,7 +36,9 @@ const SpotList: FC<SpotListProps> = (props: SpotListProps) => {
             <Text style={styles.company}>{item.company}</Text>
             <Text style={styles.price}>{item.price > 0 ? `$${item.price}/day` : 'Free'}</Text>
             
-            <TouchableOpacity style={styles.bookButton}>
+            <TouchableOpacity 
+              onPress={() => navigate('Book', { id: item._id })}
+              style={styles.bookButton}>
               <Text style={styles.bookText}>Book</Text>
             </TouchableOpacity>
           </View>
@@ -62,6 +66,7 @@ const styles = StyleSheet.create({
     marginTop: 5
   },
   list: {
+    backgroundColor: '#f2f2f2',
     borderColor: '#ccc',
     borderRadius: 10,
     borderWidth: .5,

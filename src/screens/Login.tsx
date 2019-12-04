@@ -63,7 +63,7 @@ export default function Login() {
   }, [data])
 
   const callListScreen = () => {
-    setTimeout(() => navigate('ListScreen'), 1000)
+    setTimeout(() => navigate('List'), 1000)
   }
 
   const handleSubmit = () => {

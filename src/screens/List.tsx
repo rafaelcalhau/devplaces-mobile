@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigation } from 'react-navigation-hooks'
 import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
@@ -11,7 +11,7 @@ import { Spot } from '../store/ducks/spots/types'
 import { spotsRequest } from '../store/ducks/spots/actions'
 import { logout } from '../store/ducks/user/actions'
 
-export default function List() {
+export default function List () {
   const [isFiltering, setFilteringState] = useState(false)
   const [search, setSearch] = useState('')
   const [techs, setTechs] = useState([])
@@ -61,12 +61,12 @@ export default function List() {
     dispatch(spotsRequest(search, userToken))
   }
 
-  async function logoutUser () {
+  function logoutUser () {
     AsyncStorage
       .removeItem('user')
       .then(() => {
         dispatch(logout())
-        navigate('LoginScreen')
+        navigate('Login')
       })
   }
 
