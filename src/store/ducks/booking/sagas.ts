@@ -4,9 +4,8 @@ import { bookFailed, bookSuccess } from './actions'
 import { BookRequest } from './types'
 import api from '../../../services/api'
 
-export function * load (action: BookRequest) {
+export function * create (action: BookRequest) {
   const { payload } = action
-  console.log('load', payload)
 
   try {
     const response = yield call(api.post, `/spots/${payload.spotId}/bookings`, {
