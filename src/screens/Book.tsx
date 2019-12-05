@@ -1,31 +1,43 @@
-import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
-import { Keyboard, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import {useDispatch, useSelector } from 'react-redux'
+import { Alert, Keyboard, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { useNavigation, useNavigationParam } from 'react-navigation-hooks'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import moment from 'moment'
 
 import theme from '../theme'
 import { AppState } from '../store'
+import { bookRequest } from '../store/ducks/booking/actions'
 
 export default function Book() {
+  const dispatch = useDispatch()
   const [date, setDate] = useState('')
   const [showDatepicker, setDatepickerVisibility] = useState(false)
   const spotId = useNavigationParam('id')
-  const { id: userId } = useSelector((state: AppState) => state.user.data)
+  const { id: userId, token } = useSelector((state: AppState) => state.user.data)
+  const bookList = useSelector((state: AppState) => state.book.data)
   const navigation = useNavigation()
+
+  useEffect(() => {
+    if (bookList.length) {
+      Alert.alert('Booking a spot', 'Great! Your spot was successfully reserved.')
+      navigation.goBack()
+    }
+  }, [bookList])
 
   function handleDate (d: any) {
     const value = d || date
 
     setDate(moment(new Date(value)).format('YYYY-MM-DD'))
     setDatepickerVisibility(false)
-    
+
     Keyboard.dismiss()
   }
 
   function handleRequest () {
-
+    if (date.length) {
+      dispatch(bookRequest({ date, spotId, userId, token }))
+    }
   }
   
   return (
