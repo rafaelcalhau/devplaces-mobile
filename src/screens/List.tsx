@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigation } from 'react-navigation-hooks'
 import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/Feather'
 import SpotList from '../components/SpotList'
 import { AppState } from '../store'
 import { Spot } from '../store/ducks/spots/types' 
+import { bookListRequest } from '../store/ducks/booking/actions'
 import { spotsRequest } from '../store/ducks/spots/actions'
 import { logout } from '../store/ducks/user/actions'
 
@@ -18,10 +19,13 @@ export default function List () {
   const dispatch = useDispatch()
   const { navigate } = useNavigation()
   const spotsState = useSelector((state: AppState) => state.spots)
-  const { token : userToken } = useSelector((state: AppState) => state.user.data)
+  const { id: userId, token } = useSelector((state: AppState) => state.user.data)
   const Logo = require('../assets/logo.png')
 
-  useEffect(() => handleSearch(), [])
+  useEffect(() => {
+    handleSearch()
+    requestBookList()
+  }, [])
   useEffect(() => groupSpots(), [spotsState.data])
 
   function groupSpots () {
@@ -58,7 +62,7 @@ export default function List () {
   }
 
   function handleSearch () {
-    dispatch(spotsRequest(search, userToken))
+    dispatch(spotsRequest(search, token))
   }
 
   function logoutUser () {
@@ -70,7 +74,7 @@ export default function List () {
       })
   }
 
-  function renderSpots() {
+  function renderSpots () {
     const keys: any = Object.keys(techs)
 
     if (spotsState.loaded && !keys.length && search.length) {
@@ -99,6 +103,10 @@ export default function List () {
         }
       </ScrollView>
     )
+  }
+
+  function requestBookList () {
+    dispatch(bookListRequest({ userId, token }))
   }
   
   return (

@@ -11,6 +11,7 @@ import * as UserSagas from './user/sagas'
 export default function * rootSaga() {
   return yield all([
     takeLatest(BookActions.BOOK_REQUEST, BookSagas.create),
+    takeLatest(BookActions.LOAD_REQUEST, BookSagas.load),
     takeLatest(SpotActions.SPOTS_REQUEST, SpotsSagas.load),
     takeLatest(UserActions.LOGIN_REQUEST, UserSagas.login)
   ])

@@ -4,11 +4,18 @@ export type Book = {
 }
 
 export enum BookActions {
-  BOOK_REQUEST = 'book/REQUEST',
-  BOOK_FAILED = 'book/FAILED',
-  BOOK_SUCCESS = 'book/SUCCESS'
+  BOOK_REQUEST = 'book/CREATE_REQUEST',
+  BOOK_FAILED = 'book/CREATE_FAILED',
+  BOOK_SUCCESS = 'book/CREATE_SUCCESS',
+  LOAD_REQUEST = 'book/LOAD_REQUEST',
+  LOAD_FAILED = 'book/LOAD_FAILED',
+  LOAD_SUCCESS = 'book/LOAD_SUCCESS'
 }
 
+export interface BookLoadListPayload {
+  userId: string;
+  token: string
+}
 
 export interface BookRequestPayload {
   date: string;
@@ -20,6 +27,11 @@ export interface BookRequestPayload {
 export interface BookRequest {
   type: string;
   payload: BookRequestPayload;
+}
+
+export interface LoadRequest {
+  type: string;
+  payload: BookLoadListPayload;
 }
 
 export interface BookState {
