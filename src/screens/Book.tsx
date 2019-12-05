@@ -1,16 +1,28 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
-import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Keyboard, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { useNavigation, useNavigationParam } from 'react-navigation-hooks'
+import DateTimePicker from '@react-native-community/datetimepicker'
+import moment from 'moment'
 
 import theme from '../theme'
 import { AppState } from '../store'
 
 export default function Book() {
   const [date, setDate] = useState('')
+  const [showDatepicker, setDatepickerVisibility] = useState(false)
   const spotId = useNavigationParam('id')
   const { id: userId } = useSelector((state: AppState) => state.user.data)
   const navigation = useNavigation()
+
+  function handleDate (d: any) {
+    const value = d || date
+
+    setDate(moment(new Date(value)).format('YYYY-MM-DD'))
+    setDatepickerVisibility(false)
+    
+    Keyboard.dismiss()
+  }
 
   function handleRequest () {
 
@@ -24,13 +36,12 @@ export default function Book() {
         <Text style={styles.label}>PERFECT DATE</Text>
         <TextInput
           autoCapitalize='none'
-          autoCorrect={false}
-          onChangeText={setDate}
+          onTouchStart={() => setDatepickerVisibility(true)}
           placeholder='Which date do you want?'
           placeholderTextColor='#999'
           style={styles.input}
           value={date}
-          />
+        />
 
         <TouchableOpacity
           onPress={handleRequest}
@@ -42,6 +53,17 @@ export default function Book() {
           style={[styles.button, styles.buttonBack]}>
           <Text style={styles.buttonBackText}>Cancel</Text>
         </TouchableOpacity>
+
+        {
+          showDatepicker
+          && <DateTimePicker
+              value={new Date(moment().format())}
+              mode='date'
+              is24Hour={true}
+              display='default'
+              onChange={(event, date) => handleDate(date)}
+            />
+        }
       </View>
     </SafeAreaView>
   )
