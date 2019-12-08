@@ -6,12 +6,8 @@
 
 Mobile application for the project devPlaces which is inspired in Rocketseat Omnistack Week 9
 
-![devPlaces](docs/images/devplaces-ios-01-login.png)
-![devPlaces](docs/images/devplaces-ios-02-listing-spots.png)
-![devPlaces](docs/images/devplaces-ios-03-listing-with-search.png)
-![devPlaces](docs/images/devplaces-ios-04-booking.png)
-![devPlaces](docs/images/devplaces-ios-05-booking-confirmed.png)
-![devPlaces](docs/images/devplaces-ios-06-booking-requested.png)
+![devPlaces](docs/images/devplaces-ios-01.jpg)
+![devPlaces](docs/images/devplaces-ios-02.jpg)
 
 ## Installation
 
