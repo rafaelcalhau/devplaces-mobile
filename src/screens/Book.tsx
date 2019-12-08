@@ -21,7 +21,7 @@ export default function Book() {
 
   useEffect(() => {
     if (bookList.length > bookings) {
-      Alert.alert('Booking a spot', 'Great! Your spot was successfully reserved.')
+      Alert.alert('Booking a spot', 'Great! Your request was successfully sent.')
       navigation.goBack()
     }
   }, [bookList])
