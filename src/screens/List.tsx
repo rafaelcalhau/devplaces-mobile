@@ -27,7 +27,7 @@ export default function List () {
   const Logo = require('../assets/logo.png')
 
   const socket = useMemo(() => socketio(socketURL, {
-    query: { userId }
+    query: { userId, type: 'mobile' }
   }), [])
 
   // onMount
