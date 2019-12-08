@@ -2,5 +2,6 @@
   "apiURL": "https://devplaces.calhau.me/api",
   "displayName": "devplacesmobile",
   "name": "devplacesmobile",
+  "socketURL": "https://devplaces.calhau.me",
   "uploadsUrl": "https://devplaces.calhau.me/files"
 }

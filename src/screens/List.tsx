@@ -1,16 +1,20 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigation } from 'react-navigation-hooks'
-import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Alert, Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 import Icon from 'react-native-vector-icons/Feather'
+import socketio from 'socket.io-client'
+import moment from 'moment'
 
 import SpotList from '../components/SpotList'
 import { AppState } from '../store'
 import { Spot } from '../store/ducks/spots/types' 
 import { bookListRequest } from '../store/ducks/booking/actions'
+import { BookResponse } from '../store/ducks/booking/types'
 import { spotsRequest } from '../store/ducks/spots/actions'
 import { logout } from '../store/ducks/user/actions'
+import { socketURL } from '../../app.json'
 
 export default function List () {
   const [isFiltering, setFilteringState] = useState(false)
@@ -22,10 +26,31 @@ export default function List () {
   const { id: userId, token } = useSelector((state: AppState) => state.user.data)
   const Logo = require('../assets/logo.png')
 
+  const socket = useMemo(() => socketio(socketURL, {
+    query: { userId }
+  }), [])
+
+  // onMount
   useEffect(() => {
     handleSearch()
     requestBookList()
   }, [])
+
+  // onUpdate
+  useEffect(() => {
+    socket.on('booking_response', (data: BookResponse): void => {
+      const date = moment(new Date(data.date)).format('LL')
+      const answer = data.approved ? 'confirmed' : 'denied'
+      const title = data.approved ? 'Booking confirmed!' : "We're Sorry"
+
+      Alert.alert(
+        title,
+        `Your booking to a spot in ${data.company} at ${date} was ${answer}!`
+      )
+    })
+  }, [socket])
+  
+  // onUpdate
   useEffect(() => groupSpots(), [spotsState.data])
 
   function groupSpots () {

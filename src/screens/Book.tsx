@@ -16,10 +16,11 @@ export default function Book() {
   const spotId = useNavigationParam('id')
   const { id: userId, token } = useSelector((state: AppState) => state.user.data)
   const bookList = useSelector((state: AppState) => state.book.data)
+  const [bookings] = useState(bookList.length)
   const navigation = useNavigation()
 
   useEffect(() => {
-    if (bookList.length) {
+    if (bookList.length > bookings) {
       Alert.alert('Booking a spot', 'Great! Your spot was successfully reserved.')
       navigation.goBack()
     }

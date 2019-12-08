@@ -29,6 +29,13 @@ export interface BookRequest {
   payload: BookRequestPayload;
 }
 
+export interface BookResponse {
+  id: string;
+  company: string;
+  date: string;
+  approved: boolean;
+}
+
 export interface LoadRequest {
   type: string;
   payload: BookLoadListPayload;
