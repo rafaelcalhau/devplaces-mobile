@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigation } from 'react-navigation-hooks'
+import { useNavigation } from '@react-navigation/native'
 import AsyncStorage from '@react-native-community/async-storage'
 import {
   Alert,
@@ -63,7 +63,7 @@ export default function Login() {
   }, [data])
 
   const callListScreen = () => {
-    setTimeout(() => navigate('List'), 1000)
+    setTimeout(() => navigate('List' as never), 1000)
   }
 
   const handleSubmit = () => {

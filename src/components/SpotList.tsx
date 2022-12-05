@@ -1,6 +1,13 @@
 import React, { FC } from 'react'
-import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { useNavigation } from 'react-navigation-hooks'
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
+} from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 import { Spot } from '../store/ducks/spots/types'
 import { uploadsUrl } from '../../app.json'
 import theme from '../theme'
@@ -37,7 +44,7 @@ const SpotList: FC<SpotListProps> = (props: SpotListProps) => {
             <Text style={styles.price}>{item.price > 0 ? `$${item.price}/day` : 'Free'}</Text>
             
             <TouchableOpacity 
-              onPress={() => navigate('Book', { id: item._id })}
+              onPress={() => navigate('Book' as never, { id: item._id } as never)}
               style={styles.bookButton}>
               <Text style={styles.bookText}>Book</Text>
             </TouchableOpacity>

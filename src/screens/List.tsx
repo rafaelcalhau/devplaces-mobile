@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigation } from 'react-navigation-hooks'
+import { useNavigation } from '@react-navigation/native'
 import { Alert, Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 import Icon from 'react-native-vector-icons/Feather'
@@ -95,7 +95,7 @@ export default function List () {
       .removeItem('user')
       .then(() => {
         dispatch(logout())
-        navigate('Login')
+        navigate('Login' as never)
       })
   }
 

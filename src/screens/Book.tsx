@@ -1,19 +1,33 @@
-import React, { useEffect, useState } from 'react'
+import React, { ComponentType, ReactElement, ReactNode, useEffect, useState } from 'react'
 import {useDispatch, useSelector } from 'react-redux'
-import { Alert, Keyboard, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import { useNavigation, useNavigationParam } from 'react-navigation-hooks'
+import {
+  Alert,
+  Keyboard,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
+} from 'react-native'
+import { RouteProp, useNavigation } from '@react-navigation/native'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import moment from 'moment'
 
+import { ScreenParamsList } from '../common/interfaces';
 import theme from '../theme'
 import { AppState } from '../store'
 import { bookRequest } from '../store/ducks/booking/actions'
 
-export default function Book() {
+interface BookScreenProps {
+  route: RouteProp<ScreenParamsList, "Book">
+}
+export default function Book({ route }: BookScreenProps) {
+  const { id: spotId } = route.params
+
   const dispatch = useDispatch()
   const [date, setDate] = useState('')
   const [showDatepicker, setDatepickerVisibility] = useState(false)
-  const spotId = useNavigationParam('id')
   const { id: userId, token } = useSelector((state: AppState) => state.user.data)
   const bookList = useSelector((state: AppState) => state.book.data)
   const [bookings] = useState(bookList.length)
